@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package agennext.control.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/AGenNext/Agent-Control/gen/go/agennext/control/v1;controlv1";
+
+enum ControlAction {
+  CONTROL_ACTION_UNSPECIFIED = 0;
+  CONTROL_ACTION_START = 1;
+  CONTROL_ACTION_STOP = 2;
+  CONTROL_ACTION_PAUSE = 3;
+  CONTROL_ACTION_RESUME = 4;
+  CONTROL_ACTION_FREEZE = 5;
+  CONTROL_ACTION_UNFREEZE = 6;
+  CONTROL_ACTION_RECONCILE = 7;
+}
+
+enum ControlStatus {
+  CONTROL_STATUS_UNSPECIFIED = 0;
+  CONTROL_STATUS_REQUESTED = 1;
+  CONTROL_STATUS_VALIDATED = 2;
+  CONTROL_STATUS_AUTHORIZED = 3;
+  CONTROL_STATUS_EXECUTED = 4;
+  CONTROL_STATUS_REJECTED = 5;
+  CONTROL_STATUS_FAILED = 6;
+}
+
+message ControlRequest {
+  string id = 1;
+  string target = 2;
+  ControlAction action = 3;
+  string requested_by = 4;
+  repeated string constraints = 5;
+  repeated string guard_refs = 6;
+  repeated string evidence_refs = 7;
+  ControlStatus status = 8;
+  google.protobuf.Timestamp requested_at = 9;
+}
+
+message ControlDecision {
+  string id = 1;
+  string request_id = 2;
+  ControlStatus status = 3;
+  string accountable_human = 4;
+  repeated string evidence_refs = 5;
+  google.protobuf.Timestamp decided_at = 6;
+}
+
+message ControlExecution {
+  string id = 1;
+  string request_id = 2;
+  ControlAction action = 3;
+  string target = 4;
+  repeated string outputs = 5;
+  repeated string evidence_refs = 6;
+  string reconciliation_ref = 7;
+  google.protobuf.Timestamp executed_at = 8;
+}
